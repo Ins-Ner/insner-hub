@@ -160,12 +160,22 @@
 <footer class="footer">InsNer HUB v4.0 &nbsp;|&nbsp; insner.com.br</footer>
 
 <script>
-function handleDownload(event){
-  event.preventDefault();
-  window.location.href = "InsNerHub.zip";
+var DOWNLOAD_URL = "InsNerHub.zip";
+
+function handleDownload(e) {
+  e.preventDefault();
+
+  var adUrl = "#"; // link de anúncio se quiser
+  if (adUrl !== "#") {
+    window.open(adUrl, '_blank');
+  }
+
+  setTimeout(function(){
+    window.location.href = DOWNLOAD_URL;
+  }, 300);
 }
 </script>
-  var DOWNLOAD_URL = "SEU_LINK_DE_DOWNLOAD_AQUI";
+  var DOWNLOAD_URL = "InsNerHub.zip";
   function handleDownload(e) {
     e.preventDefault();
     var adUrl = "#";
