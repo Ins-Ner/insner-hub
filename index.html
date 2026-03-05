@@ -165,7 +165,7 @@ var DOWNLOAD_URL = "InsNerHub.zip";
 function handleDownload(e) {
   e.preventDefault();
 
-  var adUrl = "#"; // link de anúncio se quiser
+  var adUrl = "#"; // se eu quiser colocar anúncio depois
   if (adUrl !== "#") {
     window.open(adUrl, '_blank');
   }
@@ -175,13 +175,6 @@ function handleDownload(e) {
   }, 300);
 }
 </script>
-  var DOWNLOAD_URL = "InsNerHub.zip";
-  function handleDownload(e) {
-    e.preventDefault();
-    var adUrl = "#";
-    if (adUrl !== "#") window.open(adUrl, '_blank');
-    setTimeout(function(){ window.location.href = DOWNLOAD_URL; }, 300);
-  }
 
   // ═══════════════════════════════════════════════
   // CANVAS — Rede Neural + Circuitos + Fluxo
