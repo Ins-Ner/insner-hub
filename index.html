@@ -150,31 +150,23 @@
     <div class="feat-card"><div class="feat-title">GRATUITO</div><div class="feat-desc">Limpo, direto e gratuito</div></div>
   </div>
 
-<div class="btn-wrap">
-  <a class="btn-download" href="InsNerHub.zip" onclick="handleDownload(event)">⬇ BAIXAR GRÁTIS</a>
-  <span class="btn-sub">Windows 10 / 11 &nbsp;·&nbsp; v4.0 &nbsp;·&nbsp; Requer privilégios de admin</span>
-</div>
+  <div class="btn-wrap">
+    <a class="btn-download" href="InsNerHub.zip" onclick="handleDownload(event)">⬇ BAIXAR GRÁTIS</a>
+    <span class="btn-sub">Windows 10 / 11 &nbsp;·&nbsp; v4.0 &nbsp;·&nbsp; Requer privilégios de admin</span>
+  </div>
 
 </section>
 
 <footer class="footer">InsNer HUB v4.0 &nbsp;|&nbsp; insner.com.br</footer>
 
 <script>
-var DOWNLOAD_URL = "InsNerHub.zip";
-
-function handleDownload(e) {
-  e.preventDefault();
-
-  var adUrl = "#"; // se eu quiser colocar anúncio depois
-  if (adUrl !== "#") {
-    window.open(adUrl, '_blank');
+  var DOWNLOAD_URL = "InsNerHub.zip";
+  function handleDownload(e) {
+    e.preventDefault();
+    var adUrl = "#";
+    if (adUrl !== "#") window.open(adUrl, '_blank');
+    setTimeout(function(){ window.location.href = DOWNLOAD_URL; }, 300);
   }
-
-  setTimeout(function(){
-    window.location.href = DOWNLOAD_URL;
-  }, 300);
-}
-</script>
 
   // ═══════════════════════════════════════════════
   // CANVAS — Rede Neural + Circuitos + Fluxo
