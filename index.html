@@ -23,7 +23,8 @@
       --text:   #e0e0ff;
       --dim:    #5a5a8a;
     }
-    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Share Tech Mono', monospace; overflow-x: hidden; }
+    html, body { height: 100%; background: transparent; color: var(--text); font-family: 'Share Tech Mono', monospace; overflow-x: hidden; }
+    html { background: var(--bg); }
 
     /* Barra top/bottom */
     body::after { content:''; position:fixed; top:0; left:0; right:0; height:3px; background:var(--cyan); box-shadow:0 0 18px var(--cyan); z-index:100; }
@@ -177,7 +178,7 @@
 <section id="contato" style="position:relative;z-index:2;max-width:760px;margin:0 auto;padding:40px 20px;">
   <h2 style="font-family:'Orbitron',sans-serif;color:var(--purple);font-size:22px;letter-spacing:0.2em;margin-bottom:18px;text-shadow:0 0 10px var(--purple);">CONTATO</h2>
   <p style="color:var(--text);font-size:13px;line-height:1.9;margin-bottom:14px;">Para dúvidas, sugestões, relatos de bugs ou parcerias, entre em contato pelo e-mail abaixo:</p>
-  <p style="font-family:'Orbitron',sans-serif;color:var(--cyan);font-size:14px;letter-spacing:0.1em;">contato@insner.com.br</p>
+  <p style="font-family:'Orbitron',sans-serif;color:var(--cyan);font-size:14px;letter-spacing:0.1em;">contato.insner@gmail.com</p>
   <p style="color:var(--dim);font-size:11px;margin-top:14px;">Respondemos em até 48 horas úteis.</p>
 </section>
 
@@ -189,7 +190,7 @@
   <p style="color:var(--text);font-size:13px;line-height:1.9;margin-bottom:14px;"><strong style="color:var(--cyan);">2. Cookies</strong><br>Utilizamos cookies de terceiros (Google AdSense e Google Analytics) para análise de tráfego e personalização de anúncios. Você pode desativar cookies nas configurações do seu navegador.</p>
   <p style="color:var(--text);font-size:13px;line-height:1.9;margin-bottom:14px;"><strong style="color:var(--cyan);">3. Anúncios</strong><br>Este site utiliza o Google AdSense para exibição de anúncios. O Google pode usar cookies para exibir anúncios com base em visitas anteriores do usuário a este e outros sites. Para mais informações, acesse <a href="https://policies.google.com/privacy" target="_blank" style="color:var(--cyan);">policies.google.com/privacy</a>.</p>
   <p style="color:var(--text);font-size:13px;line-height:1.9;margin-bottom:14px;"><strong style="color:var(--cyan);">4. Software InsNer HUB</strong><br>O aplicativo InsNer HUB não coleta, armazena nem transmite dados pessoais dos usuários. Todas as operações são realizadas localmente no computador do usuário.</p>
-  <p style="color:var(--text);font-size:13px;line-height:1.9;"><strong style="color:var(--cyan);">5. Contato</strong><br>Para dúvidas sobre esta política, entre em contato: contato@insner.com.br</p>
+  <p style="color:var(--text);font-size:13px;line-height:1.9;"><strong style="color:var(--cyan);">5. Contato</strong><br>Para dúvidas sobre esta política, entre em contato: contato.insner@gmail.com</p>
 </section>
 
 <script>
@@ -663,20 +664,3 @@
 
     // Resto com paralaxe
     ctx.setTransform(1,0,0,1,camX,camY);
-    drawCircuits();
-    sparks.forEach(s=>{ s.update(); s.draw(); });
-    net.update(); net.draw();
-    flows.forEach(f=>{ f.update(); f.draw(); });
-    drawHD();
-    drawWave(camY);
-
-    // UI elements sem paralaxe
-    ctx.setTransform(1,0,0,1,0,0);
-    drawDataParticles();
-
-    requestAnimationFrame(animate);
-  }
-  animate();
-</script>
-</body>
-</html>
