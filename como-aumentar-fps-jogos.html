@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Como aumentar FPS em jogos sem trocar hardware — InsNer HUB</title>
+  <meta name="description" content="Guia completo para aumentar FPS em jogos sem gastar nada. Otimize Windows, drivers, configurações in-game e muito mais.">
+  <meta name="keywords" content="aumentar FPS, mais FPS jogos, otimizar FPS, melhorar performance games, Windows FPS, InsNer">
+  <link rel="canonical" href="https://insner.com.br/como-aumentar-fps-jogos.html">
+  <link rel="icon" type="image/png" href="logo-st.png">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5074327565831734" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root { --cyan:#00ffe5; --purple:#bf00ff; --pink:#ff0099; --green:#00ff99; --orange:#ff9900; --bg:#030308; --surface:#0a0020; --text:#e0e0ff; --dim:#5a5a8a; }
+    html { background:var(--bg); }
+    body { background:transparent; color:var(--text); font-family:'Share Tech Mono',monospace; overflow-x:hidden; }
+    body::after { content:''; position:fixed; top:0; left:0; right:0; height:3px; background:var(--cyan); box-shadow:0 0 18px var(--cyan); z-index:100; }
+    .bottom-bar { position:fixed; bottom:0; left:0; right:0; height:3px; background:var(--purple); box-shadow:0 0 18px var(--purple); z-index:100; }
+    .scanlines { position:fixed; inset:0; background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px); pointer-events:none; z-index:3; }
+    .nav { position:relative; z-index:10; text-align:center; padding:22px 20px 0; }
+    .nav a { font-family:'Orbitron',sans-serif; font-size:11px; color:var(--cyan); text-decoration:none; letter-spacing:0.2em; border:1px solid var(--cyan); padding:7px 18px; border-radius:6px; transition:background 0.2s, color 0.2s; }
+    .nav a:hover { background:var(--cyan); color:var(--bg); }
+    .container { position:relative; z-index:2; max-width:780px; margin:0 auto; padding:50px 24px 100px; }
+    .tag { display:inline-block; font-family:'Orbitron',sans-serif; font-size:10px; color:var(--bg); background:var(--green); padding:3px 12px; border-radius:4px; letter-spacing:0.15em; margin-bottom:18px; }
+    h1 { font-family:'Orbitron',sans-serif; font-size:clamp(20px,4vw,32px); font-weight:900; color:var(--green); text-shadow:0 0 20px var(--green); line-height:1.3; margin-bottom:12px; }
+    .meta { color:var(--dim); font-size:11px; letter-spacing:0.1em; margin-bottom:36px; }
+    .divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--green),transparent); margin:32px 0; }
+    h2 { font-family:'Orbitron',sans-serif; font-size:15px; font-weight:700; color:var(--cyan); text-shadow:0 0 10px var(--cyan); letter-spacing:0.15em; margin:36px 0 14px; }
+    p { font-size:14px; line-height:1.9; color:var(--text); margin-bottom:16px; }
+    ul, ol { padding-left:22px; margin-bottom:16px; }
+    li { font-size:14px; line-height:1.9; color:var(--text); margin-bottom:6px; }
+    strong { color:var(--cyan); }
+    .tip-box { background:var(--surface); border-left:3px solid var(--green); padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .tip-box p { margin-bottom:0; color:var(--green); }
+    .warn-box { background:var(--surface); border-left:3px solid var(--orange); padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .warn-box p { margin-bottom:0; color:var(--orange); }
+    .impact-table { width:100%; border-collapse:collapse; margin:20px 0; font-size:13px; }
+    .impact-table th { font-family:'Orbitron',sans-serif; font-size:10px; color:var(--cyan); border-bottom:1px solid var(--surface); padding:8px 12px; text-align:left; letter-spacing:0.1em; }
+    .impact-table td { padding:8px 12px; border-bottom:1px solid var(--surface); color:var(--text); }
+    .impact-table tr:last-child td { border-bottom:none; }
+    .high { color:var(--green); }
+    .mid  { color:var(--orange); }
+    .low  { color:var(--dim); }
+    .cta { text-align:center; margin:48px 0 20px; }
+    .cta a { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.2em; color:var(--cyan); border:1px solid var(--cyan); padding:16px 40px; border-radius:8px; text-decoration:none; transition:background 0.3s, color 0.3s; box-shadow:0 0 14px rgba(0,255,229,0.2); }
+    .cta a:hover { background:var(--cyan); color:var(--bg); }
+    .footer { position:relative; z-index:2; text-align:center; padding:20px; font-size:10px; color:var(--dim); letter-spacing:0.1em; }
+    .footer a { color:var(--dim); text-decoration:none; }
+    .footer a:hover { color:var(--cyan); }
+  </style>
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="bottom-bar"></div>
+<div class="nav"><a href="/">← VOLTAR PARA O INSNER HUB</a></div>
+
+<div class="container">
+  <span class="tag">FPS</span>
+  <h1>Como aumentar FPS em jogos sem trocar hardware</h1>
+  <p class="meta">InsNer HUB &nbsp;·&nbsp; março de 2026 &nbsp;·&nbsp; 9 min de leitura</p>
+  <div class="divider"></div>
+
+  <p>Você não precisa gastar dinheiro em hardware novo para jogar com mais FPS. Existem dezenas de otimizações de software que podem fazer uma diferença significativa — desde simples ajustes nas configurações do Windows até tweaks avançados de GPU. Neste guia, cobrimos tudo do mais simples ao mais técnico.</p>
+
+  <h2>TABELA DE IMPACTO DAS OTIMIZAÇÕES</h2>
+  <table class="impact-table">
+    <tr><th>OTIMIZAÇÃO</th><th>IMPACTO NO FPS</th><th>DIFICULDADE</th></tr>
+    <tr><td>Encerrar processos background</td><td class="high">Alto</td><td>Fácil</td></tr>
+    <tr><td>Plano de alto desempenho</td><td class="high">Alto</td><td>Fácil</td></tr>
+    <tr><td>Atualizar drivers GPU</td><td class="high">Alto</td><td>Fácil</td></tr>
+    <tr><td>Ajustar configurações in-game</td><td class="high">Alto</td><td>Fácil</td></tr>
+    <tr><td>Desativar V-Sync</td><td class="mid">Médio</td><td>Fácil</td></tr>
+    <tr><td>Hardware GPU Scheduling</td><td class="mid">Médio</td><td>Fácil</td></tr>
+    <tr><td>Otimizar registro</td><td class="mid">Médio</td><td>Médio</td></tr>
+    <tr><td>Limpar RAM standby</td><td class="mid">Médio</td><td>Médio</td></tr>
+    <tr><td>Desativar Xbox Game Bar</td><td class="low">Baixo</td><td>Fácil</td></tr>
+    <tr><td>Desativar notificações</td><td class="low">Baixo</td><td>Fácil</td></tr>
+  </table>
+
+  <h2>1. ENCERRE TUDO QUE NÃO FOR O JOGO</h2>
+  <p>Cada programa aberto consome CPU, RAM e às vezes GPU — todos recursos que o jogo poderia estar usando. Antes de jogar, feche navegadores, Discord, Spotify, clientes de nuvem e qualquer outro programa desnecessário.</p>
+  <p>O InsNer HUB automatiza esse processo pela função <strong>PROCESSOS</strong> do Game Booster, encerrando dezenas de processos conhecidos de uma vez.</p>
+
+  <h2>2. PLANO DE ENERGIA: ALTO DESEMPENHO</h2>
+  <p>O plano de energia <strong>Balanceado</strong> do Windows limita o processador para economizar energia. Isso se traduz diretamente em menos FPS — especialmente em jogos que dependem muito de CPU como estratégia, simulação e mundo aberto.</p>
+  <p>Mude para <strong>Alto Desempenho</strong> ou <strong>Desempenho Máximo</strong> pelo Painel de Controle → Opções de Energia. O InsNer HUB aplica isso com a função <strong>ENERGIA</strong>.</p>
+
+  <div class="tip-box"><p>💡 Em processadores AMD Ryzen, o plano "AMD Ryzen Balanced" disponível após instalar os drivers AMD pode ser melhor que o "Alto Desempenho" nativo do Windows.</p></div>
+
+  <h2>3. ATUALIZE OS DRIVERS DA GPU</h2>
+  <p>Drivers novos trazem otimizações específicas para jogos recentes que podem representar ganhos de 10-30% de FPS em alguns títulos. Mantenha os drivers sempre atualizados:</p>
+  <ul>
+    <li><strong>NVIDIA:</strong> GeForce Experience ou nvidia.com/drivers</li>
+    <li><strong>AMD:</strong> AMD Software: Adrenalin ou amd.com/drivers</li>
+    <li><strong>Intel Arc:</strong> Intel Driver & Support Assistant</li>
+  </ul>
+
+  <h2>4. ATIVE O HARDWARE GPU SCHEDULING</h2>
+  <p>O <strong>HAGS</strong> permite que a GPU gerencie sua própria memória de vídeo diretamente, sem passar pelo CPU. Isso reduz a latência e pode aumentar o FPS em jogos que são limitados pela CPU.</p>
+  <p>Configurações → Sistema → Vídeo → Configurações de gráficos → Agendamento de GPU com aceleração de hardware → Ativar. O InsNer HUB ativa isso automaticamente pela função <strong>GPU</strong>.</p>
+
+  <h2>5. DESATIVE O V-SYNC</h2>
+  <p>O V-Sync limita o FPS à taxa de atualização do monitor para evitar tearing. O problema é que ele introduz latência de entrada e pode derrubar o FPS para metade quando o hardware não consegue manter a taxa cheia.</p>
+  <p>Se você tem um monitor com <strong>FreeSync</strong> (AMD) ou <strong>G-Sync</strong> (NVIDIA), desative o V-Sync e use a sincronização variável do monitor — você terá a ausência de tearing sem a penalidade de latência.</p>
+
+  <h2>6. AJUSTE AS CONFIGURAÇÕES GRÁFICAS</h2>
+  <p>As configurações in-game têm o maior impacto de todas. As que mais pesam e que você pode reduzir sem perder muito na aparência:</p>
+  <ul>
+    <li><strong>Qualidade de sombras</strong> — pesa muito na GPU, reduza para Médio</li>
+    <li><strong>Ray Tracing</strong> — desative se não tiver GPU de última geração</li>
+    <li><strong>Anti-aliasing</strong> — use FXAA ou TAA no lugar de MSAA 4x/8x</li>
+    <li><strong>Distância de visualização</strong> — impacto enorme em jogos open world</li>
+    <li><strong>Oclusão ambiente (AO)</strong> — reduza de HBAO+ para SSAO</li>
+    <li><strong>Reflexos</strong> — uma das configurações mais pesadas, reduza para Baixo</li>
+  </ul>
+
+  <div class="tip-box"><p>💡 Resolução é o fator que mais impacta o FPS. Jogar em 1080p em vez de 1440p pode dobrar o FPS sem alterar nenhuma outra configuração.</p></div>
+
+  <h2>7. DESATIVE O XBOX GAME BAR</h2>
+  <p>O Xbox Game Bar é o overlay do Windows para gravação e screenshots. Ele consome recursos mesmo quando não está sendo usado ativamente. Para desativar: Configurações → Jogos → Xbox Game Bar → desligar.</p>
+  <p>Se quiser manter apenas o FPS counter, considere usar o overlay da própria GPU (NVIDIA GeForce Experience ou AMD Radeon Software) que é mais leve.</p>
+
+  <h2>8. OTIMIZE O REGISTRO DO WINDOWS</h2>
+  <p>O registro do Windows contém configurações que afetam diretamente a responsividade do sistema durante jogos — tempo de resposta de timers, prioridade de interrupções e outros parâmetros de baixo nível.</p>
+  <p>O InsNer HUB aplica um conjunto seguro dessas otimizações pela função <strong>REGEDIT TUNER</strong>, com backup automático para restauração.</p>
+
+  <h2>9. MONITORE A TEMPERATURA</h2>
+  <p>Uma causa oculta de queda de FPS é o <strong>thermal throttling</strong> — quando o processador ou GPU superam a temperatura limite e reduzem automaticamente o desempenho para se proteger.</p>
+  <p>Use o <strong>MSI Afterburner</strong> ou <strong>HWiNFO</strong> para monitorar temperaturas durante o jogo. Se CPU passar de 90°C ou GPU de 85°C, o sistema está em throttling e você precisa melhorar o resfriamento.</p>
+
+  <div class="warn-box"><p>⚠ Nunca ignore o thermal throttling — além de derrubar o FPS, pode danificar o hardware a longo prazo. Limpar o cooler e trocar a pasta térmica resolve na maioria dos casos.</p></div>
+
+  <h2>10. USE O INSNER HUB</h2>
+  <p>O InsNer HUB reúne todas as principais otimizações de sistema em um único lugar. Com o Game Booster, você aplica de uma vez: encerramento de processos, limpeza de RAM, plano de alto desempenho, prioridade de CPU e otimizações de GPU — tudo com um clique e tudo reversível.</p>
+
+  <div class="divider"></div>
+  <p>Com essas otimizações, a maioria dos jogadores consegue ganhos entre 10% e 40% de FPS sem trocar absolutamente nenhum hardware. Comece pelas mais simples — plano de energia, fechar programas e atualizar drivers — e vá avançando conforme necessário.</p>
+
+  <div class="cta"><a href="/">⬇ BAIXAR INSNER HUB GRÁTIS</a></div>
+</div>
+
+<footer class="footer">
+  InsNer HUB v4.1 &nbsp;|&nbsp; insner.com.br &nbsp;|&nbsp;
+  <a href="/">Início</a> &nbsp;|&nbsp;
+  <a href="/#faq">FAQ</a> &nbsp;|&nbsp;
+  <a href="/#contato">Contato</a> &nbsp;|&nbsp;
+  <a href="/#privacidade">Privacidade</a>
+</footer>
+</body>
+</html>
