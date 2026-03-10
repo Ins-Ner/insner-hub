@@ -189,25 +189,25 @@
 
   <div style="display:flex;flex-direction:column;gap:16px;">
 
-    <a href="otimizar-pc-jogos-windows-11" style="text-decoration:none;display:block;background:var(--surface);border:1px solid var(--cyan);border-radius:10px;padding:20px 24px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 0 24px rgba(0,255,229,0.3)'" onmouseout="this.style.boxShadow='none'">
+    <a href="otimizar-pc-jogos-windows-11/" style="text-decoration:none;display:block;background:var(--surface);border:1px solid var(--cyan);border-radius:10px;padding:20px 24px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 0 24px rgba(0,255,229,0.3)'" onmouseout="this.style.boxShadow='none'">
       <span style="font-family:'Orbitron',sans-serif;font-size:10px;color:var(--bg);background:var(--cyan);padding:2px 10px;border-radius:4px;letter-spacing:0.1em;">GUIA</span>
       <p style="font-family:'Orbitron',sans-serif;color:var(--cyan);font-size:14px;margin:10px 0 6px;letter-spacing:0.05em;">Como otimizar seu PC para jogos no Windows 11</p>
       <p style="color:var(--dim);font-size:12px;line-height:1.6;">Plano de energia, processos, RAM, GPU Scheduling e muito mais. Tudo que você precisa para tirar o máximo do seu hardware.</p>
     </a>
 
-    <a href="como-aumentar-fps-jogos" style="text-decoration:none;display:block;background:var(--surface);border:1px solid var(--green);border-radius:10px;padding:20px 24px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 0 24px rgba(0,255,153,0.3)'" onmouseout="this.style.boxShadow='none'">
+    <a href="como-aumentar-fps-jogos/" style="text-decoration:none;display:block;background:var(--surface);border:1px solid var(--green);border-radius:10px;padding:20px 24px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 0 24px rgba(0,255,153,0.3)'" onmouseout="this.style.boxShadow='none'">
       <span style="font-family:'Orbitron',sans-serif;font-size:10px;color:var(--bg);background:var(--green);padding:2px 10px;border-radius:4px;letter-spacing:0.1em;">FPS</span>
       <p style="font-family:'Orbitron',sans-serif;color:var(--green);font-size:14px;margin:10px 0 6px;letter-spacing:0.05em;">Como aumentar FPS em jogos sem trocar hardware</p>
       <p style="color:var(--dim);font-size:12px;line-height:1.6;">10 otimizações que podem aumentar seu FPS entre 10% e 40% sem gastar nada. Do mais simples ao mais avançado.</p>
     </a>
 
-    <a href="como-liberar-ram-windows" style="text-decoration:none;display:block;background:var(--surface);border:1px solid var(--pink);border-radius:10px;padding:20px 24px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 0 24px rgba(255,0,153,0.3)'" onmouseout="this.style.boxShadow='none'">
+    <a href="como-liberar-ram-windows/" style="text-decoration:none;display:block;background:var(--surface);border:1px solid var(--pink);border-radius:10px;padding:20px 24px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 0 24px rgba(255,0,153,0.3)'" onmouseout="this.style.boxShadow='none'">
       <span style="font-family:'Orbitron',sans-serif;font-size:10px;color:var(--bg);background:var(--pink);padding:2px 10px;border-radius:4px;letter-spacing:0.1em;">MEMÓRIA</span>
       <p style="font-family:'Orbitron',sans-serif;color:var(--pink);font-size:14px;margin:10px 0 6px;letter-spacing:0.05em;">Como liberar RAM no Windows 10 e 11</p>
       <p style="color:var(--dim);font-size:12px;line-height:1.6;">Entenda como a memória funciona no Windows e como liberar RAM antes de jogar para evitar travamentos e stuttering.</p>
     </a>
 
-    <a href="o-que-e-dns-flush" style="text-decoration:none;display:block;background:var(--surface);border:1px solid var(--purple);border-radius:10px;padding:20px 24px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 0 24px rgba(191,0,255,0.3)'" onmouseout="this.style.boxShadow='none'">
+    <a href="o-que-e-dns-flush/" style="text-decoration:none;display:block;background:var(--surface);border:1px solid var(--purple);border-radius:10px;padding:20px 24px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 0 24px rgba(191,0,255,0.3)'" onmouseout="this.style.boxShadow='none'">
       <span style="font-family:'Orbitron',sans-serif;font-size:10px;color:var(--bg);background:var(--purple);padding:2px 10px;border-radius:4px;letter-spacing:0.1em;">REDE</span>
       <p style="font-family:'Orbitron',sans-serif;color:var(--purple);font-size:14px;margin:10px 0 6px;letter-spacing:0.05em;">O que é DNS flush e por que você deveria fazer</p>
       <p style="color:var(--dim);font-size:12px;line-height:1.6;">Cache DNS corrompido pode causar lentidão na internet e lag em jogos online. Saiba como resolver em menos de um minuto.</p>
@@ -391,12 +391,9 @@
         const a=this.nodes3d[i], b=this.nodes3d[j];
         const da=Math.max(0,(a.z+1)/2), db=Math.max(0,(b.z+1)/2);
         const alpha=((da+db)/2)*0.6;
-        // Glow largo
+        // Linha principal com glow via lineWidth
         ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
-        ctx.strokeStyle=`rgba(0,220,255,${alpha*0.25})`; ctx.lineWidth=4; ctx.stroke();
-        // Linha principal
-        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
-        ctx.strokeStyle=`rgba(0,220,255,${alpha*0.7})`; ctx.lineWidth=0.8; ctx.stroke();
+        ctx.strokeStyle=`rgba(0,220,255,${alpha*0.6})`; ctx.lineWidth=1.2; ctx.stroke();
       });
 
       // Nós com glow massivo
@@ -735,7 +732,15 @@
   let sparks  = Array.from({length:50}, ()=>new Spark());
   buildCircuits();
 
-  function animate() {
+  const TARGET_FPS = 120;
+  const FRAME_MS   = 1000 / TARGET_FPS;
+  let lastFrame = 0;
+
+  function animate(ts) {
+    requestAnimationFrame(animate);
+    if (ts - lastFrame < FRAME_MS) return;
+    lastFrame = ts;
+
     tick++;
     camX += (targetCamX - camX) * 0.06;
     camY += (targetCamY - camY) * 0.06;
@@ -756,9 +761,8 @@
     drawDataParticles();
 
     ctx.setTransform(1,0,0,1,0,0);
-    requestAnimationFrame(animate);
   }
-  animate();
+  requestAnimationFrame(animate);
 
   // Email via JS — imune ao Cloudflare
   (function(){
