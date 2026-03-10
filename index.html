@@ -306,11 +306,11 @@
   // 1. ESFERA 3D
   // ══════════════════════════
   class NeuralNet {
-    constructor() { this.nodes3d=[]; this.rings=[]; this.connections=[]; this.build(); this.rotX=0; this.rotY=0; this.breathe=0; this.scale=1; }
-    build() {
+    constructor(total=180) { this.nodes3d=[]; this.rings=[]; this.connections=[]; this.build(total); this.rotX=0; this.rotY=0; this.breathe=0; this.scale=1; }
+    build(total=180) {
       this.cx = W*0.22; this.cy = H*0.48; this.r = Math.min(W,H)*0.16;
       this.nodes3d = [];
-      const total = 180, golden = Math.PI*(3-Math.sqrt(5));
+      const golden = Math.PI*(3-Math.sqrt(5));
       for (let i=0; i<total; i++) {
         const y = 1-(i/(total-1))*2;
         const rad = Math.sqrt(1-y*y);
@@ -391,9 +391,12 @@
         const a=this.nodes3d[i], b=this.nodes3d[j];
         const da=Math.max(0,(a.z+1)/2), db=Math.max(0,(b.z+1)/2);
         const alpha=((da+db)/2)*0.6;
-        // Linha principal com glow via lineWidth
+        // Glow largo
         ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
-        ctx.strokeStyle=`rgba(0,220,255,${alpha*0.6})`; ctx.lineWidth=1.2; ctx.stroke();
+        ctx.strokeStyle=`rgba(0,220,255,${alpha*0.25})`; ctx.lineWidth=4; ctx.stroke();
+        // Linha principal
+        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(0,220,255,${alpha*0.7})`; ctx.lineWidth=0.8; ctx.stroke();
       });
 
       // Nós com glow massivo
@@ -647,9 +650,18 @@
   }
 
   // ══════════════════════════
+  // DETECÇÃO MOBILE
+  // ══════════════════════════
+  const isMobile   = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 768;
+  const NET_NODES  = isMobile ? 80  : 180;
+  const FLOW_COUNT = isMobile ? 12  : 30;
+  const SPARK_COUNT= isMobile ? 20  : 50;
+  const STAR_COUNT = isMobile ? 80  : 200;
+
+  // ══════════════════════════
   // 5. ESTRELAS
   // ══════════════════════════
-  const stars = Array.from({length:200}, ()=>({
+  const stars = Array.from({length:STAR_COUNT}, ()=>({
     x: Math.random()*2000, y: Math.random()*1200,
     s: Math.random()*1.8+0.3,
     phase: Math.random()*Math.PI*2,
@@ -727,12 +739,12 @@
   // ══════════════════════════
   // INIT + LOOP
   // ══════════════════════════
-  const net   = new NeuralNet();
-  let flows   = Array.from({length:30}, ()=>new FlowParticle());
-  let sparks  = Array.from({length:50}, ()=>new Spark());
+  const net   = new NeuralNet(NET_NODES);
+  let flows   = Array.from({length:FLOW_COUNT},  ()=>new FlowParticle());
+  let sparks  = Array.from({length:SPARK_COUNT}, ()=>new Spark());
   buildCircuits();
 
-  const TARGET_FPS = 120;
+  const TARGET_FPS = isMobile ? 60 : 120;
   const FRAME_MS   = 1000 / TARGET_FPS;
   let lastFrame = 0;
 
@@ -740,7 +752,6 @@
     requestAnimationFrame(animate);
     if (ts - lastFrame < FRAME_MS) return;
     lastFrame = ts;
-
     tick++;
     camX += (targetCamX - camX) * 0.06;
     camY += (targetCamY - camY) * 0.06;
