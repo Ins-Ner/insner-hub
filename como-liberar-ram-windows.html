@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Como liberar RAM no Windows 10 e 11 — InsNer HUB</title>
+  <meta name="description" content="Aprenda como liberar memória RAM no Windows 10 e 11. Reduza travamentos, aumente o desempenho e entenda como a memória funciona no sistema.">
+  <meta name="keywords" content="liberar RAM Windows, memória RAM, standby list, otimizar memória, Windows 10, Windows 11, InsNer">
+  <link rel="canonical" href="https://insner.com.br/como-liberar-ram-windows/">
+  <link rel="icon" type="image/png" href="logo-st.png">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5074327565831734" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root { --cyan:#00ffe5; --purple:#bf00ff; --pink:#ff0099; --green:#00ff99; --orange:#ff9900; --bg:#030308; --surface:#0a0020; --text:#e0e0ff; --dim:#5a5a8a; }
+    html { background:var(--bg); }
+    body { background:transparent; color:var(--text); font-family:'Share Tech Mono',monospace; overflow-x:hidden; }
+    body::after { content:''; position:fixed; top:0; left:0; right:0; height:3px; background:var(--cyan); box-shadow:0 0 18px var(--cyan); z-index:100; }
+    .bottom-bar { position:fixed; bottom:0; left:0; right:0; height:3px; background:var(--purple); box-shadow:0 0 18px var(--purple); z-index:100; }
+    .scanlines { position:fixed; inset:0; background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px); pointer-events:none; z-index:3; }
+    .nav { position:relative; z-index:10; text-align:center; padding:22px 20px 0; }
+    .nav a { font-family:'Orbitron',sans-serif; font-size:11px; color:var(--cyan); text-decoration:none; letter-spacing:0.2em; border:1px solid var(--cyan); padding:7px 18px; border-radius:6px; transition:background 0.2s, color 0.2s; }
+    .nav a:hover { background:var(--cyan); color:var(--bg); }
+    .container { position:relative; z-index:2; max-width:780px; margin:0 auto; padding:50px 24px 100px; }
+    .tag { display:inline-block; font-family:'Orbitron',sans-serif; font-size:10px; color:var(--bg); background:var(--pink); padding:3px 12px; border-radius:4px; letter-spacing:0.15em; margin-bottom:18px; }
+    h1 { font-family:'Orbitron',sans-serif; font-size:clamp(20px,4vw,32px); font-weight:900; color:var(--pink); text-shadow:0 0 20px var(--pink); line-height:1.3; margin-bottom:12px; }
+    .meta { color:var(--dim); font-size:11px; letter-spacing:0.1em; margin-bottom:36px; }
+    .divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--pink),transparent); margin:32px 0; }
+    h2 { font-family:'Orbitron',sans-serif; font-size:15px; font-weight:700; color:var(--cyan); text-shadow:0 0 10px var(--cyan); letter-spacing:0.15em; margin:36px 0 14px; }
+    p { font-size:14px; line-height:1.9; color:var(--text); margin-bottom:16px; }
+    ul, ol { padding-left:22px; margin-bottom:16px; }
+    li { font-size:14px; line-height:1.9; color:var(--text); margin-bottom:6px; }
+    strong { color:var(--cyan); }
+    .tip-box { background:var(--surface); border-left:3px solid var(--green); padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .tip-box p { margin-bottom:0; color:var(--green); }
+    .warn-box { background:var(--surface); border-left:3px solid var(--orange); padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .warn-box p { margin-bottom:0; color:var(--orange); }
+    .cta { text-align:center; margin:48px 0 20px; }
+    .cta a { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.2em; color:var(--cyan); border:1px solid var(--cyan); padding:16px 40px; border-radius:8px; text-decoration:none; transition:background 0.3s, color 0.3s; box-shadow:0 0 14px rgba(0,255,229,0.2); }
+    .cta a:hover { background:var(--cyan); color:var(--bg); }
+    .footer { position:relative; z-index:2; text-align:center; padding:20px; font-size:10px; color:var(--dim); letter-spacing:0.1em; }
+    .footer a { color:var(--dim); text-decoration:none; }
+    .footer a:hover { color:var(--cyan); }
+  </style>
+</head>
+<body>
+<canvas id="bgCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;"></canvas>
+<script>
+  (function(){
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, tick = 0;
+    function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; buildCircuits(); }
+    window.addEventListener('resize', resize);
+
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 768;
+    const STAR_COUNT   = isMobile ? 60  : 150;
+    const SPARK_COUNT  = isMobile ? 15  : 40;
+    const TARGET_FPS   = isMobile ? 60  : 120;
+    const FRAME_MS     = 1000 / TARGET_FPS;
+    let lastFrame = 0;
+
+    const C_CYAN   = [0,255,229];
+    const C_PURPLE = [191,0,255];
+
+    // ESTRELAS
+    const stars = Array.from({length:STAR_COUNT}, ()=>({
+      x: Math.random()*2000, y: Math.random()*1200,
+      s: Math.random()*1.8+0.3,
+      phase: Math.random()*Math.PI*2,
+      speed: 0.003+Math.random()*0.005
+    }));
+    function drawStars() {
+      stars.forEach(s => {
+        s.phase += s.speed;
+        const glow = (Math.sin(s.phase)+1)/2;
+        const sx = s.x % W;
+        const sy = s.y % H;
+        ctx.globalAlpha = 0.15 + glow*0.55;
+        ctx.fillStyle = 'white';
+        ctx.fillRect(sx, sy, s.s, s.s);
+      });
+      ctx.globalAlpha = 1;
+    }
+
+    // CIRCUITOS
+    let circuits = [];
+    function buildCircuits() {
+      circuits = [];
+      const border = 0.09;
+      function inBorder(x, y) {
+        const bx = x/W, by = y/H;
+        return bx < border || bx > 1-border || by < border || by > 1-border;
+      }
+      const rows = 7, cols = 10;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols-1; c++) {
+          const x1 = (c/(cols-1))*W, y1 = (r/(rows-1))*H;
+          const x2 = ((c+1)/(cols-1))*W, y2 = y1+(Math.random()-0.5)*H*0.03;
+          if (Math.random()>0.4 && (inBorder(x1,y1)||inBorder(x2,y2)))
+            circuits.push({x1,y1,x2,y2,progress:Math.random(),speed:0.001+Math.random()*0.002});
+        }
+      }
+      for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows-1; r++) {
+          const x=(c/(cols-1))*W, y1=(r/(rows-1))*H, y2=((r+1)/(rows-1))*H;
+          if (Math.random()>0.4 && (inBorder(x,y1)||inBorder(x,y2)))
+            circuits.push({x1:x,y1,x2:x,y2,progress:Math.random(),speed:0.001+Math.random()*0.002});
+        }
+      }
+    }
+    function drawCircuits() {
+      circuits.forEach(c => {
+        c.progress += c.speed;
+        if (c.progress > 1) c.progress = 0;
+        ctx.beginPath(); ctx.moveTo(c.x1,c.y1); ctx.lineTo(c.x2,c.y2);
+        ctx.strokeStyle='rgba(0,80,150,0.08)'; ctx.lineWidth=0.8; ctx.stroke();
+        const px=c.x1+(c.x2-c.x1)*c.progress, py=c.y1+(c.y2-c.y1)*c.progress;
+        const t0=Math.max(0,c.progress-0.15);
+        const tx=c.x1+(c.x2-c.x1)*t0, ty=c.y1+(c.y2-c.y1)*t0;
+        const grad=ctx.createLinearGradient(tx,ty,px,py);
+        grad.addColorStop(0,'rgba(0,200,255,0)'); grad.addColorStop(1,'rgba(0,220,255,0.55)');
+        ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(px,py);
+        ctx.strokeStyle=grad; ctx.lineWidth=1.5; ctx.stroke();
+        ctx.beginPath(); ctx.arc(px,py,1.5,0,Math.PI*2);
+        ctx.fillStyle='rgba(0,255,229,0.9)'; ctx.fill();
+      });
+    }
+
+    // SPARKS
+    class Spark {
+      constructor(){ this.reset(); }
+      reset(){
+        this.x=W*(0.05+Math.random()*0.9); this.y=H*(0.05+Math.random()*0.9);
+        this.vx=(Math.random()-0.5)*0.5; this.vy=(Math.random()-0.5)*0.5;
+        this.life=1.0; this.decay=0.004+Math.random()*0.005;
+        this.size=Math.random()*1.5+0.4;
+        this.color=Math.random()>0.5?C_CYAN:C_PURPLE;
+      }
+      update(){ this.x+=this.vx; this.y+=this.vy; this.life-=this.decay; if(this.life<=0)this.reset(); }
+      draw(){
+        const [r,g,b]=this.color;
+        ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${r},${g},${b},${this.life*0.6})`; ctx.fill();
+      }
+    }
+    const sparks = Array.from({length:SPARK_COUNT}, ()=>new Spark());
+
+    resize();
+
+    function animate(ts) {
+      requestAnimationFrame(animate);
+      if (ts - lastFrame < FRAME_MS) return;
+      lastFrame = ts;
+      tick++;
+      ctx.clearRect(0,0,W,H);
+      drawStars();
+      drawCircuits();
+      sparks.forEach(s=>{ s.update(); s.draw(); });
+    }
+    requestAnimationFrame(animate);
+  })();
+</script>
+
+<div class="scanlines"></div>
+<div class="bottom-bar"></div>
+<div class="nav"><a href="/">← VOLTAR PARA O INSNER HUB</a></div>
+
+<div class="container">
+  <span class="tag">MEMÓRIA</span>
+  <h1>Como liberar RAM no Windows 10 e 11</h1>
+  <p class="meta">InsNer HUB &nbsp;·&nbsp; março de 2026 &nbsp;·&nbsp; 7 min de leitura</p>
+  <div class="divider"></div>
+
+  <p>A memória RAM é um dos componentes que mais afeta a performance do dia a dia no Windows. Quando ela enche, o sistema começa a usar o disco como substituto — processo muito mais lento que resulta em travamentos, lentidão e engasgos em jogos. Neste guia, vamos explicar como a RAM funciona no Windows e como liberar espaço de forma eficiente.</p>
+
+  <h2>COMO O WINDOWS GERENCIA A RAM</h2>
+  <p>O Windows não libera a RAM imediatamente quando você fecha um programa. Em vez disso, ele mantém dados na <strong>standby list</strong> — uma área de memória com conteúdo que pode ser reutilizado rapidamente se o mesmo programa for aberto novamente.</p>
+  <p>Essa estratégia é inteligente na maioria das situações, mas pode ser problemática para jogos: o jogo precisa de RAM livre, e o Windows está guardando dados de programas que você fechou há horas.</p>
+
+  <h2>SINAIS DE QUE A RAM ESTÁ CHEIA</h2>
+  <ul>
+    <li>Travamentos e engasgos durante jogos (stuttering)</li>
+    <li>Carregamentos lentos de mapas e fases</li>
+    <li>Sistema lento ao alternar entre janelas</li>
+    <li>Uso de disco elevado mesmo sem fazer nada</li>
+    <li>Gerenciador de Tarefas mostrando 80-90%+ de RAM em uso</li>
+  </ul>
+
+  <h2>1. ENCERRE PROGRAMAS EM BACKGROUND</h2>
+  <p>A forma mais eficaz de liberar RAM é encerrar programas que consomem memória sem necessidade. Os principais candidatos são:</p>
+  <ul>
+    <li><strong>Navegadores</strong> — Chrome e Edge podem usar 500MB a 2GB com várias abas abertas</li>
+    <li><strong>Discord</strong> — consome entre 200-400MB mesmo minimizado</li>
+    <li><strong>Spotify</strong> — cerca de 200-300MB mesmo pausado</li>
+    <li><strong>OneDrive e Google Drive</strong> — sincronização em background</li>
+    <li><strong>Adobe Creative Cloud</strong> — processo que fica sempre rodando</li>
+  </ul>
+
+  <div class="tip-box"><p>💡 Use o Gerenciador de Tarefas (Ctrl+Shift+Esc) e ordene os processos por memória para identificar os maiores consumidores no seu sistema.</p></div>
+
+  <h2>2. LIMPE A STANDBY LIST</h2>
+  <p>Para liberar a memória em standby, você pode usar o <strong>RAMMap</strong> da Microsoft (ferramenta gratuita do Sysinternals) e executar a opção "Empty → Standby List". Isso força o Windows a liberar memória que está reservada mas não está sendo usada ativamente.</p>
+  <p>O InsNer HUB automatiza esse processo com a função <strong>RAM</strong> do Game Booster, limpando a standby list com um clique usando ferramentas nativas do Windows.</p>
+
+  <h2>3. DESATIVE PROGRAMAS DE INICIALIZAÇÃO</h2>
+  <p>Muitos programas se adicionam à inicialização do Windows e ficam rodando desde o boot, consumindo RAM sem você pedir. Para gerenciar:</p>
+  <ol>
+    <li>Abra o Gerenciador de Tarefas (Ctrl+Shift+Esc)</li>
+    <li>Vá na aba <strong>Inicializar</strong></li>
+    <li>Clique com o botão direito nos programas desnecessários e selecione <strong>Desabilitar</strong></li>
+  </ol>
+  <p>O InsNer HUB possui a função <strong>STARTUP CLEANER</strong> que automatiza essa desativação para os programas mais comuns.</p>
+
+  <div class="warn-box"><p>⚠ Não desative programas de segurança como antivírus e drivers de hardware na inicialização — apenas aplicativos como Spotify, Discord, Teams e similares.</p></div>
+
+  <h2>4. AJUSTE O ARQUIVO DE PAGINAÇÃO</h2>
+  <p>O arquivo de paginação (pagefile) é um espaço no disco que o Windows usa como extensão da RAM quando ela está cheia. Ter um tamanho adequado evita erros de memória, mas não substitui RAM física — o disco é muito mais lento.</p>
+  <p>Para ajustar: Propriedades do Sistema → Configurações Avançadas → Desempenho → Configurações → Avançado → Memória Virtual. Deixe o Windows gerenciar automaticamente ou configure manualmente com pelo menos 1,5x o tamanho da RAM instalada.</p>
+
+  <h2>5. VERIFIQUE VAZAMENTOS DE MEMÓRIA</h2>
+  <p>Alguns programas mal desenvolvidos têm <strong>memory leaks</strong> — consomem cada vez mais RAM com o tempo sem liberar. Se notar que a RAM sobe gradualmente ao longo das horas sem abrir novos programas, identifique o processo responsável pelo Gerenciador de Tarefas.</p>
+
+  <h2>6. CONSIDERE UPGRADES</h2>
+  <p>Se após todas as otimizações você ainda fica com menos de 2GB livres ao jogar, pode ser hora de considerar um upgrade de hardware:</p>
+  <ul>
+    <li><strong>8GB RAM</strong> — mínimo para jogos modernos</li>
+    <li><strong>16GB RAM</strong> — recomendado para a maioria dos jogos atuais</li>
+    <li><strong>32GB RAM</strong> — ideal para streaming e jogos pesados simultaneamente</li>
+  </ul>
+
+  <div class="tip-box"><p>💡 RAM em dual channel (dois pentes iguais em slots corretos) pode aumentar a performance em até 15-20% comparado a um único pente de mesma capacidade.</p></div>
+
+  <div class="divider"></div>
+  <p>Liberar RAM antes de jogar é uma das otimizações mais rápidas e eficazes. Com o InsNer HUB, todo esse processo é automatizado — encerramento de processos, limpeza da standby list e desativação de programas de inicialização com poucos cliques.</p>
+
+  <div class="cta"><a href="/">⬇ BAIXAR INSNER HUB GRÁTIS</a></div>
+</div>
+
+<footer class="footer">
+  InsNer HUB v4.1 &nbsp;|&nbsp; insner.com.br &nbsp;|&nbsp;
+  <a href="/">Início</a> &nbsp;|&nbsp;
+  <a href="/#faq">FAQ</a> &nbsp;|&nbsp;
+  <a href="/#contato">Contato</a> &nbsp;|&nbsp;
+  <a href="/#privacidade">Privacidade</a>
+</footer>
+</body>
+</html>
