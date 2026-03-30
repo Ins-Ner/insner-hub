@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-31P7R5447W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-31P7R5447W");
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Como desativar programas de inicialização no Windows — InsNer HUB</title>
+  <meta name="description" content="Aprenda como desativar programas de inicialização no Windows 10 e 11 para acelerar o boot e liberar RAM e CPU para jogos.">
+  <meta name="keywords" content="desativar inicialização Windows, programas startup, acelerar boot Windows, inicialização lenta, InsNer">
+  <link rel="canonical" href="https://insner.com.br/como-desativar-programas-inicializacao">
+  <link rel="icon" type="image/png" href="logo-st.png">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5074327565831734" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root { --cyan:#00ffe5; --purple:#bf00ff; --pink:#ff0099; --green:#00ff99; --orange:#ff9900; --bg:#030308; --surface:#0a0020; --text:#e0e0ff; --dim:#5a5a8a; }
+    html { background:var(--bg); }
+    body { background:transparent; color:var(--text); font-family:'Share Tech Mono',monospace; overflow-x:hidden; }
+    body::after { content:''; position:fixed; top:0; left:0; right:0; height:3px; background:var(--cyan); box-shadow:0 0 18px var(--cyan); z-index:100; }
+    .bottom-bar { position:fixed; bottom:0; left:0; right:0; height:3px; background:var(--purple); box-shadow:0 0 18px var(--purple); z-index:100; }
+    .scanlines { position:fixed; inset:0; background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px); pointer-events:none; z-index:3; }
+    .nav { position:relative; z-index:10; text-align:center; padding:22px 20px 0; }
+    .nav a { font-family:'Orbitron',sans-serif; font-size:11px; color:var(--cyan); text-decoration:none; letter-spacing:0.2em; border:1px solid var(--cyan); padding:7px 18px; border-radius:6px; transition:background 0.2s, color 0.2s; }
+    .nav a:hover { background:var(--cyan); color:var(--bg); }
+    .container { position:relative; z-index:2; max-width:780px; margin:0 auto; padding:50px 24px 100px; }
+    .tag { display:inline-block; font-family:'Orbitron',sans-serif; font-size:10px; color:var(--bg); background:var(--purple); padding:3px 12px; border-radius:4px; letter-spacing:0.15em; margin-bottom:18px; }
+    h1 { font-family:'Orbitron',sans-serif; font-size:clamp(20px,4vw,32px); font-weight:900; color:var(--purple); text-shadow:0 0 20px var(--purple); line-height:1.3; margin-bottom:12px; }
+    .meta { color:var(--dim); font-size:11px; letter-spacing:0.1em; margin-bottom:36px; }
+    .divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--purple),transparent); margin:32px 0; }
+    h2 { font-family:'Orbitron',sans-serif; font-size:15px; font-weight:700; color:var(--cyan); text-shadow:0 0 10px var(--cyan); letter-spacing:0.15em; margin:36px 0 14px; }
+    p { font-size:14px; line-height:1.9; color:var(--text); margin-bottom:16px; }
+    ul, ol { padding-left:22px; margin-bottom:16px; }
+    li { font-size:14px; line-height:1.9; color:var(--text); margin-bottom:6px; }
+    strong { color:var(--cyan); }
+    .tip-box { background:var(--surface); border-left:3px solid var(--green); padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .tip-box p { margin-bottom:0; color:var(--green); }
+    .warn-box { background:var(--surface); border-left:3px solid var(--orange); padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .warn-box p { margin-bottom:0; color:var(--orange); }
+    .cta { text-align:center; margin:48px 0 20px; }
+    .cta a { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.2em; color:var(--cyan); border:1px solid var(--cyan); padding:16px 40px; border-radius:8px; text-decoration:none; transition:background 0.3s, color 0.3s; box-shadow:0 0 14px rgba(0,255,229,0.2); }
+    .cta a:hover { background:var(--cyan); color:var(--bg); }
+    .footer { position:relative; z-index:2; text-align:center; padding:20px; font-size:10px; color:var(--dim); letter-spacing:0.1em; }
+    .footer a { color:var(--dim); text-decoration:none; }
+    .footer a:hover { color:var(--cyan); }
+    @media (max-width:600px) { .cta a { font-size:11px; letter-spacing:0.1em; padding:12px 20px; } }
+  </style>
+</head>
+<body>
+<canvas id="bgCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;"></canvas>
+<script>
+  (function(){
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, tick = 0;
+    function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; buildCircuits(); }
+    window.addEventListener('resize', resize);
+
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 768;
+    const STAR_COUNT   = isMobile ? 60  : 150;
+    const SPARK_COUNT  = isMobile ? 15  : 40;
+    const TARGET_FPS   = isMobile ? 60  : 120;
+    const FRAME_MS     = 1000 / TARGET_FPS;
+    let lastFrame = 0;
+
+    const C_CYAN   = [0,255,229];
+    const C_PURPLE = [191,0,255];
+
+    // ESTRELAS
+    const stars = Array.from({length:STAR_COUNT}, ()=>({
+      x: Math.random()*2000, y: Math.random()*1200,
+      s: Math.random()*1.8+0.3,
+      phase: Math.random()*Math.PI*2,
+      speed: 0.003+Math.random()*0.005
+    }));
+    function drawStars() {
+      stars.forEach(s => {
+        s.phase += s.speed;
+        const glow = (Math.sin(s.phase)+1)/2;
+        const sx = s.x % W;
+        const sy = s.y % H;
+        ctx.globalAlpha = 0.15 + glow*0.55;
+        ctx.fillStyle = 'white';
+        ctx.fillRect(sx, sy, s.s, s.s);
+      });
+      ctx.globalAlpha = 1;
+    }
+
+    // CIRCUITOS
+    let circuits = [];
+    function buildCircuits() {
+      circuits = [];
+      const border = 0.09;
+      function inBorder(x, y) {
+        const bx = x/W, by = y/H;
+        return bx < border || bx > 1-border || by < border || by > 1-border;
+      }
+      const rows = 7, cols = 10;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols-1; c++) {
+          const x1 = (c/(cols-1))*W, y1 = (r/(rows-1))*H;
+          const x2 = ((c+1)/(cols-1))*W, y2 = y1+(Math.random()-0.5)*H*0.03;
+          if (Math.random()>0.4 && (inBorder(x1,y1)||inBorder(x2,y2)))
+            circuits.push({x1,y1,x2,y2,progress:Math.random(),speed:0.001+Math.random()*0.002});
+        }
+      }
+      for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows-1; r++) {
+          const x=(c/(cols-1))*W, y1=(r/(rows-1))*H, y2=((r+1)/(rows-1))*H;
+          if (Math.random()>0.4 && (inBorder(x,y1)||inBorder(x,y2)))
+            circuits.push({x1:x,y1,x2:x,y2,progress:Math.random(),speed:0.001+Math.random()*0.002});
+        }
+      }
+    }
+    function drawCircuits() {
+      circuits.forEach(c => {
+        c.progress += c.speed;
+        if (c.progress > 1) c.progress = 0;
+        ctx.beginPath(); ctx.moveTo(c.x1,c.y1); ctx.lineTo(c.x2,c.y2);
+        ctx.strokeStyle='rgba(0,80,150,0.08)'; ctx.lineWidth=0.8; ctx.stroke();
+        const px=c.x1+(c.x2-c.x1)*c.progress, py=c.y1+(c.y2-c.y1)*c.progress;
+        const t0=Math.max(0,c.progress-0.15);
+        const tx=c.x1+(c.x2-c.x1)*t0, ty=c.y1+(c.y2-c.y1)*t0;
+        const grad=ctx.createLinearGradient(tx,ty,px,py);
+        grad.addColorStop(0,'rgba(0,200,255,0)'); grad.addColorStop(1,'rgba(0,220,255,0.55)');
+        ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(px,py);
+        ctx.strokeStyle=grad; ctx.lineWidth=1.5; ctx.stroke();
+        ctx.beginPath(); ctx.arc(px,py,1.5,0,Math.PI*2);
+        ctx.fillStyle='rgba(0,255,229,0.9)'; ctx.fill();
+      });
+    }
+
+    // SPARKS
+    class Spark {
+      constructor(){ this.reset(); }
+      reset(){
+        this.x=W*(0.05+Math.random()*0.9); this.y=H*(0.05+Math.random()*0.9);
+        this.vx=(Math.random()-0.5)*0.5; this.vy=(Math.random()-0.5)*0.5;
+        this.life=1.0; this.decay=0.004+Math.random()*0.005;
+        this.size=Math.random()*1.5+0.4;
+        this.color=Math.random()>0.5?C_CYAN:C_PURPLE;
+      }
+      update(){ this.x+=this.vx; this.y+=this.vy; this.life-=this.decay; if(this.life<=0)this.reset(); }
+      draw(){
+        const [r,g,b]=this.color;
+        ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${r},${g},${b},${this.life*0.6})`; ctx.fill();
+      }
+    }
+    const sparks = Array.from({length:SPARK_COUNT}, ()=>new Spark());
+
+    resize();
+
+    function animate(ts) {
+      requestAnimationFrame(animate);
+      if (ts - lastFrame < FRAME_MS) return;
+      lastFrame = ts;
+      tick++;
+      ctx.clearRect(0,0,W,H);
+      drawStars();
+      drawCircuits();
+      sparks.forEach(s=>{ s.update(); s.draw(); });
+    }
+    requestAnimationFrame(animate);
+  })();
+</script>
+
+<div class="scanlines"></div>
+<div class="bottom-bar"></div>
+<div class="nav"><a href="/">← VOLTAR PARA O INSNER HUB</a></div>
+
+<div class="container">
+  <span class="tag">SISTEMA</span>
+  <h1>Como desativar programas de inicialização no Windows</h1>
+  <p class="meta">InsNer HUB &nbsp;·&nbsp; março de 2026 &nbsp;·&nbsp; 6 min de leitura</p>
+  <div class="divider"></div>
+
+  <p>Você liga o PC e espera minutos até ele ficar utilizável? A culpa provavelmente é dos programas de inicialização — aplicativos que se adicionam ao boot do Windows e ficam rodando em segundo plano sem você pedir. Desativá-los é uma das otimizações mais simples e eficazes que existem.</p>
+
+  <h2>O QUE SÃO PROGRAMAS DE INICIALIZAÇÃO?</h2>
+  <p>São programas configurados para iniciar automaticamente junto com o Windows. Cada um deles consome tempo de boot, RAM e CPU desde o momento que você liga o computador — mesmo que você nunca os abra intencionalmente.</p>
+  <p>Os maiores vilões costumam ser: Discord, Spotify, Steam, Epic Games Launcher, OneDrive, Teams, Adobe Creative Cloud, e atualizadores automáticos de vários programas.</p>
+
+  <h2>COMO DESATIVAR PELO GERENCIADOR DE TAREFAS</h2>
+  <ol>
+    <li>Pressione <strong>Ctrl + Shift + Esc</strong> para abrir o Gerenciador de Tarefas</li>
+    <li>Clique na aba <strong>Inicializar</strong> (ou "Aplicativos de inicialização" no Windows 11)</li>
+    <li>Veja a coluna <strong>Impacto na inicialização</strong> — foque nos marcados como Alto</li>
+    <li>Clique com o botão direito no programa e selecione <strong>Desabilitar</strong></li>
+  </ol>
+
+  <div class="tip-box"><p>💡 Desabilitar um programa da inicialização não o desinstala — ele continua disponível para abrir manualmente quando precisar. Só deixa de iniciar automaticamente.</p></div>
+
+  <h2>COMO DESATIVAR PELAS CONFIGURAÇÕES (WINDOWS 11)</h2>
+  <ol>
+    <li>Abra <strong>Configurações</strong> (Win + I)</li>
+    <li>Vá em <strong>Aplicativos → Inicialização</strong></li>
+    <li>Desative os programas desnecessários pela chave ao lado de cada um</li>
+  </ol>
+
+  <h2>QUAIS PROGRAMAS DESATIVAR?</h2>
+  <p>Pode desativar com segurança:</p>
+  <ul>
+    <li><strong>Discord</strong> — abra quando precisar</li>
+    <li><strong>Spotify</strong> — abre rápido quando chamado</li>
+    <li><strong>Steam / Epic / Battle.net</strong> — só precisam abrir quando for jogar</li>
+    <li><strong>OneDrive</strong> — sincroniza quando aberto manualmente</li>
+    <li><strong>Microsoft Teams</strong> — se não usar no trabalho</li>
+    <li><strong>Adobe Creative Cloud</strong> — abre quando abre qualquer produto Adobe</li>
+    <li><strong>Skype</strong> — se não usar regularmente</li>
+  </ul>
+
+  <div class="warn-box"><p>⚠ Não desative drivers de hardware, antivírus, programas de segurança ou qualquer coisa que você não reconheça. Se tiver dúvida sobre um programa, pesquise o nome antes de desativar.</p></div>
+
+  <h2>IMPACTO NO DESEMPENHO</h2>
+  <p>Os benefícios são imediatos e duplos: o PC inicializa mais rápido E fica com mais RAM livre desde o boot. Em sistemas com 8GB de RAM, desativar os programas mais pesados pode liberar 500MB a 1,5GB — uma diferença significativa para jogos.</p>
+
+  <h2>USANDO O INSNER HUB</h2>
+  <p>O InsNer HUB possui a função <strong>STARTUP CLEANER</strong> que identifica e desativa automaticamente os programas de inicialização mais comuns, sem que você precise fazer isso manualmente um por um. O processo leva segundos e os efeitos são sentidos já no próximo boot.</p>
+
+  <div class="divider"></div>
+  <p>Limpar a inicialização do Windows é uma das primeiras coisas a fazer em qualquer PC que esteja lento. É rápido, seguro e gratuito — e o impacto no tempo de boot e na disponibilidade de recursos é imediato.</p>
+
+  <div class="cta"><a href="/">⬇ BAIXAR INSNER HUB GRÁTIS</a></div>
+</div>
+<footer class="footer">
+  InsNer HUB v4.1 &nbsp;|&nbsp; insner.com.br &nbsp;|&nbsp;
+  <a href="/">Início</a> &nbsp;|&nbsp;
+  <a href="/#faq">FAQ</a> &nbsp;|&nbsp;
+  <a href="/#contato">Contato</a> &nbsp;|&nbsp;
+  <a href="/#privacidade">Privacidade</a>
+</footer>
+</body>
+</html>
