@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-31P7R5447W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-31P7R5447W");
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O que é DNS flush e por que você deveria fazer — InsNer HUB</title>
+  <meta name="description" content="Guia completo sobre DNS flush no Windows 10 e 11. Entenda como funciona o cache DNS, quando limpar, como fazer manualmente e como o InsNer HUB automatiza tudo.">
+  <meta name="keywords" content="DNS flush, limpar DNS, cache DNS Windows, ipconfig flushdns, Winsock reset, melhorar conexão, lag jogos, InsNer">
+  <link rel="canonical" href="https://insner.com.br/o-que-e-dns-flush">
+  <link rel="icon" type="image/png" href="logo-st.png">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5074327565831734" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root { --cyan:#00ffe5; --purple:#bf00ff; --pink:#ff0099; --green:#00ff99; --orange:#ff9900; --bg:#030308; --surface:#0a0020; --text:#e0e0ff; --dim:#5a5a8a; }
+    html { background:var(--bg); }
+    body { background:transparent; color:var(--text); font-family:'Share Tech Mono',monospace; overflow-x:hidden; }
+    body::after { content:''; position:fixed; top:0; left:0; right:0; height:3px; background:var(--cyan); box-shadow:0 0 18px var(--cyan); z-index:100; }
+    .bottom-bar { position:fixed; bottom:0; left:0; right:0; height:3px; background:var(--purple); box-shadow:0 0 18px var(--purple); z-index:100; }
+    .scanlines { position:fixed; inset:0; background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px); pointer-events:none; z-index:3; }
+    .nav { position:relative; z-index:10; text-align:center; padding:22px 20px 0; }
+    .nav a { font-family:'Orbitron',sans-serif; font-size:11px; color:var(--cyan); text-decoration:none; letter-spacing:0.2em; border:1px solid var(--cyan); padding:7px 18px; border-radius:6px; transition:background 0.2s, color 0.2s; }
+    .nav a:hover { background:var(--cyan); color:var(--bg); }
+    .container { position:relative; z-index:2; max-width:780px; margin:0 auto; padding:50px 24px 100px; }
+    .tag { display:inline-block; font-family:'Orbitron',sans-serif; font-size:10px; color:var(--bg); background:var(--purple); padding:3px 12px; border-radius:4px; letter-spacing:0.15em; margin-bottom:18px; }
+    h1 { font-family:'Orbitron',sans-serif; font-size:clamp(20px,4vw,32px); font-weight:900; color:var(--purple); text-shadow:0 0 20px var(--purple); line-height:1.3; margin-bottom:12px; }
+    .meta { color:var(--dim); font-size:11px; letter-spacing:0.1em; margin-bottom:36px; }
+    .divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--purple),transparent); margin:32px 0; }
+    h2 { font-family:'Orbitron',sans-serif; font-size:15px; font-weight:700; color:var(--cyan); text-shadow:0 0 10px var(--cyan); letter-spacing:0.15em; margin:36px 0 14px; }
+    p { font-size:14px; line-height:1.9; color:var(--text); margin-bottom:16px; }
+    ul, ol { padding-left:22px; margin-bottom:16px; }
+    li { font-size:14px; line-height:1.9; color:var(--text); margin-bottom:6px; }
+    strong { color:var(--cyan); }
+    .tip-box { background:var(--surface); border-left:3px solid var(--green); padding:16px 20px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .tip-box p { margin-bottom:0; color:var(--green); }
+    .code-box { background:#000; border:1px solid var(--purple); padding:14px 18px; border-radius:8px; margin:16px 0; font-size:13px; color:var(--cyan); letter-spacing:0.05em; }
+    .cta { text-align:center; margin:48px 0 20px; }
+    .cta a { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.2em; color:var(--cyan); border:1px solid var(--cyan); padding:16px 40px; border-radius:8px; text-decoration:none; transition:background 0.3s, color 0.3s; box-shadow:0 0 14px rgba(0,255,229,0.2); }
+    .cta a:hover { background:var(--cyan); color:var(--bg); }
+    .footer { position:relative; z-index:2; text-align:center; padding:20px; font-size:10px; color:var(--dim); letter-spacing:0.1em; }
+    .footer a { color:var(--dim); text-decoration:none; }
+    .footer a:hover { color:var(--cyan); }
+    @media (max-width:600px) { .cta a { font-size:11px; letter-spacing:0.1em; padding:12px 20px; } }
+  </style>
+</head>
+<body>
+<canvas id="bgCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;"></canvas>
+<script>
+  (function(){
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, tick = 0;
+    function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; buildCircuits(); }
+    window.addEventListener('resize', resize);
+
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 768;
+    const STAR_COUNT   = isMobile ? 60  : 150;
+    const SPARK_COUNT  = isMobile ? 15  : 40;
+    const TARGET_FPS   = isMobile ? 60  : 120;
+    const FRAME_MS     = 1000 / TARGET_FPS;
+    let lastFrame = 0;
+
+    const C_CYAN   = [0,255,229];
+    const C_PURPLE = [191,0,255];
+
+    // ESTRELAS
+    const stars = Array.from({length:STAR_COUNT}, ()=>({
+      x: Math.random()*2000, y: Math.random()*1200,
+      s: Math.random()*1.8+0.3,
+      phase: Math.random()*Math.PI*2,
+      speed: 0.003+Math.random()*0.005
+    }));
+    function drawStars() {
+      stars.forEach(s => {
+        s.phase += s.speed;
+        const glow = (Math.sin(s.phase)+1)/2;
+        const sx = s.x % W;
+        const sy = s.y % H;
+        ctx.globalAlpha = 0.15 + glow*0.55;
+        ctx.fillStyle = 'white';
+        ctx.fillRect(sx, sy, s.s, s.s);
+      });
+      ctx.globalAlpha = 1;
+    }
+
+    // CIRCUITOS
+    let circuits = [];
+    function buildCircuits() {
+      circuits = [];
+      const border = 0.09;
+      function inBorder(x, y) {
+        const bx = x/W, by = y/H;
+        return bx < border || bx > 1-border || by < border || by > 1-border;
+      }
+      const rows = 7, cols = 10;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols-1; c++) {
+          const x1 = (c/(cols-1))*W, y1 = (r/(rows-1))*H;
+          const x2 = ((c+1)/(cols-1))*W, y2 = y1+(Math.random()-0.5)*H*0.03;
+          if (Math.random()>0.4 && (inBorder(x1,y1)||inBorder(x2,y2)))
+            circuits.push({x1,y1,x2,y2,progress:Math.random(),speed:0.001+Math.random()*0.002});
+        }
+      }
+      for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows-1; r++) {
+          const x=(c/(cols-1))*W, y1=(r/(rows-1))*H, y2=((r+1)/(rows-1))*H;
+          if (Math.random()>0.4 && (inBorder(x,y1)||inBorder(x,y2)))
+            circuits.push({x1:x,y1,x2:x,y2,progress:Math.random(),speed:0.001+Math.random()*0.002});
+        }
+      }
+    }
+    function drawCircuits() {
+      circuits.forEach(c => {
+        c.progress += c.speed;
+        if (c.progress > 1) c.progress = 0;
+        ctx.beginPath(); ctx.moveTo(c.x1,c.y1); ctx.lineTo(c.x2,c.y2);
+        ctx.strokeStyle='rgba(0,80,150,0.08)'; ctx.lineWidth=0.8; ctx.stroke();
+        const px=c.x1+(c.x2-c.x1)*c.progress, py=c.y1+(c.y2-c.y1)*c.progress;
+        const t0=Math.max(0,c.progress-0.15);
+        const tx=c.x1+(c.x2-c.x1)*t0, ty=c.y1+(c.y2-c.y1)*t0;
+        const grad=ctx.createLinearGradient(tx,ty,px,py);
+        grad.addColorStop(0,'rgba(0,200,255,0)'); grad.addColorStop(1,'rgba(0,220,255,0.55)');
+        ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(px,py);
+        ctx.strokeStyle=grad; ctx.lineWidth=1.5; ctx.stroke();
+        ctx.beginPath(); ctx.arc(px,py,1.5,0,Math.PI*2);
+        ctx.fillStyle='rgba(0,255,229,0.9)'; ctx.fill();
+      });
+    }
+
+    // SPARKS
+    class Spark {
+      constructor(){ this.reset(); }
+      reset(){
+        this.x=W*(0.05+Math.random()*0.9); this.y=H*(0.05+Math.random()*0.9);
+        this.vx=(Math.random()-0.5)*0.5; this.vy=(Math.random()-0.5)*0.5;
+        this.life=1.0; this.decay=0.004+Math.random()*0.005;
+        this.size=Math.random()*1.5+0.4;
+        this.color=Math.random()>0.5?C_CYAN:C_PURPLE;
+      }
+      update(){ this.x+=this.vx; this.y+=this.vy; this.life-=this.decay; if(this.life<=0)this.reset(); }
+      draw(){
+        const [r,g,b]=this.color;
+        ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${r},${g},${b},${this.life*0.6})`; ctx.fill();
+      }
+    }
+    const sparks = Array.from({length:SPARK_COUNT}, ()=>new Spark());
+
+    resize();
+
+    function animate(ts) {
+      requestAnimationFrame(animate);
+      if (ts - lastFrame < FRAME_MS) return;
+      lastFrame = ts;
+      tick++;
+      ctx.clearRect(0,0,W,H);
+      drawStars();
+      drawCircuits();
+      sparks.forEach(s=>{ s.update(); s.draw(); });
+    }
+    requestAnimationFrame(animate);
+  })();
+</script>
+
+<div class="scanlines"></div>
+<div class="bottom-bar"></div>
+<div class="nav"><a href="/">← VOLTAR PARA O INSNER HUB</a></div>
+
+<div class="container">
+  <span class="tag">REDE</span>
+  <h1>O que é DNS flush e por que você deveria fazer</h1>
+  <p class="meta">InsNer HUB &nbsp;·&nbsp; abril de 2026 &nbsp;·&nbsp; 12 min de leitura</p>
+  <div class="divider"></div>
+
+  <p>Se você está com lentidão na internet, sites que não abrem ou lag em jogos online, o problema pode estar no cache DNS do seu computador. Neste guia completo, explicamos exatamente o que é o DNS, como o cache funciona, quando ele causa problemas, como resolver manualmente e como automatizar tudo com o InsNer HUB.</p>
+
+  <h2>O QUE É O DNS E COMO ELE FUNCIONA?</h2>
+  <p>O <strong>DNS (Domain Name System)</strong> é o sistema que traduz nomes de domínio em endereços IP. Quando você digita "youtube.com" no navegador, seu computador não sabe automaticamente qual servidor acessar — ele precisa consultar um servidor DNS para descobrir o IP correspondente.</p>
+  <p>Esse processo acontece em etapas: primeiro o sistema verifica o cache DNS local, depois consulta o servidor DNS do provedor, e se necessário vai até os servidores raiz da internet. Esse mecanismo acontece em milissegundos e é transparente para o usuário.</p>
+  <p>Para evitar fazer essa consulta toda vez, o Windows armazena as respostas em um <strong>cache DNS local</strong> — uma tabela temporária com os endereços já resolvidos. Na próxima vez que você acessar o mesmo site, o sistema usa o cache em vez de consultar o servidor, tornando a navegação mais rápida.</p>
+
+  <h2>O QUE É DNS FLUSH?</h2>
+  <p>O <strong>DNS flush</strong> é o processo de apagar completamente o conteúdo do cache DNS local. Com o cache vazio, o Windows é forçado a consultar novamente os servidores DNS para obter endereços atualizados para cada domínio.</p>
+  <p>A expressão "flush" vem do inglês e significa "esvaziar" ou "limpar com força" — como dar descarga. É exatamente isso que acontece: todo o conteúdo antigo do cache é descartado e substituído por informações frescas na próxima consulta.</p>
+
+  <h2>POR QUE O CACHE DNS PODE CAUSAR PROBLEMAS?</h2>
+  <p>O cache DNS é útil na maioria das situações, mas pode ficar desatualizado ou corrompido em vários cenários:</p>
+  <ul>
+    <li><strong>Mudança de servidor:</strong> um site migrou para um novo IP, mas o cache ainda guarda o endereço antigo — o navegador tenta acessar um servidor que não existe mais</li>
+    <li><strong>Cache corrompido:</strong> instabilidades de conexão ou quedas de energia podem corromper entradas no cache, causando erros de resolução</li>
+    <li><strong>Malware DNS:</strong> softwares maliciosos podem modificar o cache para redirecionar seu tráfego para sites falsos (DNS poisoning)</li>
+    <li><strong>Troca de provedor:</strong> ao mudar de operadora ou alterar configurações de rede, entradas antigas podem entrar em conflito com as novas</li>
+    <li><strong>Latência em jogos:</strong> servidores de jogos online mudam de IP frequentemente — entradas desatualizadas podem fazer você conectar a servidores mais distantes</li>
+    <li><strong>VPN e proxy:</strong> ao ativar ou desativar uma VPN, o cache pode conter entradas que conflitam com a nova configuração de rede</li>
+  </ul>
+
+  <div class="tip-box"><p>💡 Sintoma clássico: um site funciona normalmente no celular (4G) mas não carrega no PC. Isso quase sempre indica um problema de cache DNS no Windows.</p></div>
+
+  <h2>COMO FAZER DNS FLUSH NO WINDOWS — PASSO A PASSO</h2>
+  <p>O processo é simples e leva menos de um minuto. Primeiro, abra o Prompt de Comando como administrador:</p>
+  <ol>
+    <li>Pressione <strong>Win + X</strong> e clique em <strong>Terminal do Windows (Admin)</strong> ou <strong>Prompt de Comando (Admin)</strong></li>
+    <li>Se aparecer a janela do Controle de Conta de Usuário (UAC), clique em <strong>Sim</strong></li>
+  </ol>
+  <p>Com o terminal aberto, execute os comandos na seguinte ordem:</p>
+
+  <div class="code-box">ipconfig /flushdns</div>
+  <p>Limpa todo o cache DNS. A mensagem de confirmação será: <em>"Cache do DNS Resolver liberado com êxito."</em></p>
+
+  <div class="code-box">ipconfig /registerdns</div>
+  <p>Registra novamente os nomes DNS no sistema, forçando uma atualização completa das configurações de rede.</p>
+
+  <div class="code-box">ipconfig /release</div>
+  <p>Libera o endereço IP atual da sua conexão.</p>
+
+  <div class="code-box">ipconfig /renew</div>
+  <p>Solicita um novo endereço IP ao servidor DHCP do roteador. Útil quando o problema é mais amplo que apenas o cache DNS.</p>
+
+  <div class="tip-box"><p>💡 Para verificar quantas entradas estão no cache antes de limpar, use: <strong>ipconfig /displaydns</strong> — você verá todos os domínios armazenados e seus IPs correspondentes.</p></div>
+
+  <h2>O QUE É WINSOCK E POR QUE PRECISA SER RESETADO?</h2>
+  <p>O <strong>Winsock (Windows Sockets API)</strong> é uma interface do sistema operacional que gerencia todas as comunicações de rede dos programas. Cada aplicativo que acessa a internet — navegador, jogo, cliente de email — usa o Winsock para estabelecer conexões.</p>
+  <p>Com o tempo, o Winsock pode ser corrompido por:</p>
+  <ul>
+    <li>Instalação de software de rede mal desenvolvido</li>
+    <li>Remoção incompleta de programas (antivírus, VPNs, firewalls)</li>
+    <li>Infecção por malware que modifica as configurações de rede</li>
+    <li>Atualizações do Windows que não foram concluídas corretamente</li>
+  </ul>
+  <p>Quando o Winsock está corrompido, você pode ter internet funcionando no roteador mas programas que não conseguem conectar, ou conexões extremamente lentas sem motivo aparente.</p>
+
+  <div class="code-box">netsh winsock reset</div>
+  <p>Restaura as configurações do Winsock para o padrão de fábrica.</p>
+
+  <div class="code-box">netsh int ip reset</div>
+  <p>Redefine a pilha TCP/IP do Windows. Após executar ambos os comandos, <strong>reinicie o computador</strong> para que as alterações entrem em vigor.</p>
+
+  <h2>COMO TROCAR O SERVIDOR DNS PARA MELHORAR A VELOCIDADE</h2>
+  <p>Além de limpar o cache, trocar o servidor DNS do provedor por servidores mais rápidos e confiáveis pode melhorar significativamente a velocidade de navegação e reduzir a latência em jogos. Os servidores mais recomendados são:</p>
+  <ul>
+    <li><strong>Google DNS:</strong> 8.8.8.8 (primário) e 8.8.4.4 (secundário) — rápido e confiável globalmente</li>
+    <li><strong>Cloudflare DNS:</strong> 1.1.1.1 (primário) e 1.0.0.1 (secundário) — foco em privacidade e velocidade</li>
+    <li><strong>OpenDNS:</strong> 208.67.222.222 e 208.67.220.220 — oferece proteção contra phishing</li>
+  </ul>
+  <p>Para trocar o DNS no Windows 11: Configurações → Rede e Internet → Ethernet (ou Wi-Fi) → Propriedades do hardware → Atribuição de servidor DNS → Manual → insira os IPs acima.</p>
+
+  <h2>COM QUE FREQUÊNCIA FAZER O DNS FLUSH?</h2>
+  <p>Não existe uma frequência obrigatória — o DNS flush é uma ação corretiva, não preventiva. Faça quando:</p>
+  <ul>
+    <li>Sites não carregam sem motivo aparente</li>
+    <li>Você recebe erros como <strong>DNS_PROBE_FINISHED_NXDOMAIN</strong> ou <strong>ERR_NAME_NOT_RESOLVED</strong></li>
+    <li>A internet funciona no celular mas não no PC</li>
+    <li>Após instalar ou remover uma VPN</li>
+    <li>Após trocar de provedor de internet</li>
+    <li>Antes de sessões importantes de jogos online competitivos</li>
+  </ul>
+  <p>Alguns usuários incluem o DNS flush em uma rotina mensal de manutenção, junto com limpeza de arquivos temporários e verificação de atualizações — isso não causa nenhum problema e pode evitar issues antes que apareçam.</p>
+
+  <h2>DNS FLUSH COM O INSNER HUB — AUTOMATIZADO COM UM CLIQUE</h2>
+  <p>O InsNer HUB automatiza todo o processo pela função <strong>NET OPTIMIZER</strong> na página do Optimizer. Com um único clique, ele executa em sequência:</p>
+  <ul>
+    <li>DNS flush (ipconfig /flushdns)</li>
+    <li>Registro DNS (ipconfig /registerdns)</li>
+    <li>Winsock reset (netsh winsock reset)</li>
+    <li>IP reset (netsh int ip reset)</li>
+    <li>Liberação e renovação do IP</li>
+  </ul>
+  <p>Você não precisa abrir o terminal, digitar comandos ou se preocupar com a ordem correta de execução. O programa faz tudo em segundos e exibe o resultado de cada etapa.</p>
+
+  <div class="tip-box"><p>💡 O NET OPTIMIZER do InsNer HUB também está integrado ao Game Booster — ao ativar o boost antes de jogar, as otimizações de rede são aplicadas automaticamente junto com todas as outras melhorias de performance.</p></div>
+
+  <h2>PERGUNTAS FREQUENTES SOBRE DNS FLUSH</h2>
+  <p><strong>O DNS flush pode derrubar minha internet?</strong> Não. O processo apenas limpa o cache local — a conexão continua funcionando normalmente. No máximo, a primeira navegação após o flush pode ser ligeiramente mais lenta enquanto o cache é repovoado.</p>
+  <p><strong>DNS flush resolve problema de internet lenta?</strong> Depende da causa. Se a lentidão for por entradas DNS desatualizadas, sim. Se for por congestionamento do provedor ou sinal Wi-Fi fraco, não vai ajudar.</p>
+  <p><strong>Precisa reiniciar após o DNS flush?</strong> Para o flush simples (ipconfig /flushdns), não. Mas após o Winsock reset e o IP reset, é necessário reiniciar para que as mudanças entrem em vigor.</p>
+  <p><strong>DNS flush funciona no Windows 10?</strong> Sim, os comandos são os mesmos no Windows 10 e 11.</p>
+
+  <div class="divider"></div>
+  <p>O DNS flush é uma das manutenções mais simples, rápidas e eficazes que você pode fazer no Windows. Leva menos de um minuto, não tem nenhum risco e pode resolver problemas de conexão que pareciam sem solução. Com o InsNer HUB, o processo é ainda mais simples — um clique e está feito.</p>
+
+  <p style="margin-top:16px;">Veja também: <a href="/como-reduzir-ping-jogos" style="color:var(--cyan);">Como reduzir o ping em jogos online</a> | <a href="/otimizar-pc-jogos-windows-11" style="color:var(--cyan);">Como otimizar seu PC para jogos no Windows 11</a></p>
+
+  <div class="cta"><a href="/">⬇ BAIXAR INSNER HUB GRÁTIS</a></div>
+</div>
+<footer class="footer">
+  InsNer HUB v4.5 &nbsp;|&nbsp; insner.com.br &nbsp;|&nbsp;
+  <a href="/">Início</a> &nbsp;|&nbsp;
+  <a href="/#faq">FAQ</a> &nbsp;|&nbsp;
+  <a href="/#contato">Contato</a> &nbsp;|&nbsp;
+  <a href="/#privacidade">Privacidade</a>
+</footer>
+</body>
+</html>
